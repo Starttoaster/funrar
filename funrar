@@ -13,28 +13,28 @@ if [ -z "$WORKDIR" ] || [ -z "$DESTINATION" ]; then
 	exit 1
 fi
 
-function findRAR {
+function findrar {
 	find "$WORKDIR" -name "*.r00"
 }
 function cleanup {
-	echo -e "$str"
+	echo -e "$delme"
 	read -p "Delete the above directories (your extracted files should already be in your chosen destination)? (y/n) " -r option
 	if [ "$option" != "y" ] && [ "$option" != "n" ]; then
 		echo "invalid choice: $option"
 		cleanup
 	elif [ "$option" = "y" ]; then
-		echo "$str" | while read -r line; do
+		echo -e "$delme" | while read -r line; do
 			rm -rf "$line"
 			echo "Deleted: $line"
 		done
 	fi
 }
-str="$(findRAR | sed 's/ /\n/g' | sed 's|/[^/]*.r00|/|g')" 
+delme="$(findrar | sed 's/ /\n/g' | sed 's|/[^/]*.r00|/|g')" 
 
-if [ "$str" = "" ]; then
+if [ "$delme" = "" ]; then
         echo "Nothing to do this time.. but thanks for using FunRAR!"
 else
-	echo -e "$str" | while read -r line; do
+	findrar | while read -r line; do
 	        unrar e "$line" "$DESTINATION"
 	done
 	clear
