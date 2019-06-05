@@ -17,23 +17,28 @@ function findRAR {
 	find "$WORKDIR" -name "*.r00"
 }
 function cleanup {
-	echo -e "$delme"
+	echo -e "$str"
 	read -p "Delete the above directories (your extracted files should already be in your chosen destination)? (y/n) " -r option
 	if [ "$option" != "y" ] && [ "$option" != "n" ]; then
 		echo "invalid choice: $option"
 		cleanup
 	elif [ "$option" = "y" ]; then
-		echo -e "$delme" | while read -r line; do
+		echo "$str" | while read -r line; do
 			rm -rf "$line"
 			echo "Deleted: $line"
 		done
 	fi
 }
-delme="$(findRAR | sed 's/ /\n/g' | sed 's|/[^/]*.r00|/|g')" 
+str="$(findRAR | sed 's/ /\n/g' | sed 's|/[^/]*.r00|/|g')" 
 
-findRAR | while read -r line; do
-	unrar e "$line" "$DESTINATION"
-done
-clear
-cleanup
-echo "Thanks for using FunRAR!"
+if [ "$str" = "" ]; then
+        echo "Nothing to do this time.. but thanks for using FunRAR!"
+else
+	echo -e "$str" | while read -r line; do
+	        unrar e "$line" "$DESTINATION"
+	done
+	clear
+        cleanup
+        echo "Thanks for using FunRAR!"
+fi
+
