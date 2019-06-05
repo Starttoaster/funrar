@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# "WORKDIR" will be your starting directory. This should be where you have all your downloads of WinRAR split archives
+# "DESTINATION" will be where you want the extracted files to be moved to
+# By default, these directories are specified within your home directory. Remove the squiggly '~' and replace with what you want.
+#
+WORKDIR=~
+DESTINATION=~
+
+if [ -z "$WORKDIR" ] || [ -z "$DESTINATION" ]; then
+	echo "Please enter the values for your start and destination directories." 1>&2
+	exit 1
+fi
+
+function findRAR {
+	find "$WORKDIR" -name "*.r00"
+}
+function cleanup {
+	echo -e "$delme"
+	read -p "Delete the above directories (your extracted files should already be in your chosen destination)? (y/n) " -r option
+	if [ "$option" != "y" ] && [ "$option" != "n" ]; then
+		echo "invalid choice: $option"
+		cleanup
+	elif [ "$option" = "y" ]; then
+		echo -e "$delme" | while read -r line; do
+			rm -rf "$line"
+			echo "Deleted: $line"
+		done
+	fi
+}
+delme="$(findRAR | sed 's/ /\n/g' | sed 's|/[^/]*.r00|/|g')" 
+
+findRAR | while read -r line; do
+	unrar e "$line" "$DESTINATION"
+done
+clear
+cleanup
+echo "Thanks for using FunRAR!"
