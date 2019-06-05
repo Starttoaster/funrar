@@ -3,7 +3,7 @@ This shell program finds all WinRAR split archives in your specified working dir
 
 ### Installation
 
- 1. Clone the repo: `git clone https://github.com/Starttoaster/FunRAR.git`
+ 1. Clone the repo: `git clone https://github.com/Starttoaster/funrar.git`
 
  2. Change directory: `cd funrar/`
 
